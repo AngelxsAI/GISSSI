@@ -2,136 +2,22 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Regalo de Cumpleaños para Gissela</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #6a4c9c; /* Morado */
-      color: white;
-      text-align: center;
-      padding: 0;
-      margin: 0;
-    }
-    h1 {
-      margin-top: 50px;
-      font-size: 2.5em;
-      color: #f3e5f5;
-    }
-    .timer {
-      font-size: 3em;
-      font-weight: bold;
-      color: #d1a7d6;
-      margin-top: 30px;
-    }
-    .album {
-      margin-top: 50px;
-      padding: 20px;
-      background-color: #4a2a7d;
-      border-radius: 10px;
-    }
-    .album h2 {
-      font-size: 2em;
-      margin-bottom: 20px;
-    }
-    .album img {
-      max-width: 100%;
-      border-radius: 10px;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-      margin-bottom: 20px;
-    }
-    .footer {
-      position: absolute;
-      bottom: 10px;
-      width: 100%;
-      font-size: 1em;
-      color: #d1a7d6;
-    }
-    .message {
-      display: none;
-      font-size: 1.5em;
-      color: #f3e5f5;
-      margin-top: 50px;
-    }
-  </style>
+  <title>Árbol de Corazones y Reloj Romántico</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <h1>¡Feliz Cumpleaños Gissela!</h1>
-  <p>Un regalo especial para ti, que se abrirá el 30 de marzo a las 8:00 AM.</p>
-
-  <!-- Cronómetro -->
-  <div class="timer" id="countdown"></div>
-
-  <!-- Album de fotos -->
-  <div class="album">
-    <h2>Recuerdos y momentos especiales</h2>
-    <div id="photo-gallery">
-      <!-- Aquí irán las imágenes, que se agregan dinámicamente -->
+  <div class="container">
+    <div class="heart-tree">
+      <div class="tronco" id="tronco"></div>
+      <div class="corazones" id="heartTree"></div>
     </div>
+
+    <div class="texto" id="texto"></div>
+
+    <p class="contador">Mi amor por ti comenzó hace...</p>
+    <div id="reloj" class="reloj"></div>
   </div>
 
-  <!-- Mensaje especial que aparecerá después del cronómetro -->
-  <div class="message" id="specialMessage">
-    <h2>¡Feliz cumpleaños, Gissela!</h2>
-    <p>Hoy celebras tus 16 años, un día tan especial como tú. Un poema para ti:</p>
-    <p>"Dieciséis años, un camino por recorrer, muchos momentos por los cuales pasaremos juntos, sin importar lo dificil que sea, estare aca para ti y tu estaras para mi.</p>
-    <p>con sueños y risas que nunca se van a perder.</p>
-    <p>Hoy es tu día, brillas como una estrella,</p>
-    <p>y siempre serás nuestra niña bella."</p>
-
-    <p>Además, hoy es un domingo perfecto para comenzar nuevas aventuras... ¡Hoy vas al desagüe!</p>
-    <p>Te quiero mucho, Gissela. ¡Que tengas un día increíble! por cierto, otros mes que acaba, cada vez mas cerca de nuestro aniversario, poco a poco el tiempo pasa, el año avanza,las flores mueren,algunas logran crecer,cada año hay algo nuevo ¿quieres empezar a vivir una vida sin nada que temer o mentir?</p>
-    <p>Podemos vivir eso juntos tu y yo,sin miedos, sin celos,sin remordimiento,sin nada, vivir como dios nos trajo a este mundo. VIVIR EN PAZ</p>
-  </div>
-
-  <!-- Pie de página -->
-  <div class="footer">
-    <p>Te quiero mucho, Gissela. ¡Disfruta tu día!</p>
-  </div>
-
-  <script>
-    // Fecha objetivo: 30 de marzo a las 8:00 AM
-    const targetDate = new Date("March 30, 2025 07:00:00 GMT-0500").getTime();
-
-    // Función para actualizar el cronómetro
-    function updateCountdown() {
-      const now = new Date().getTime();
-      const distance = targetDate - now;
-
-      // Calculamos días, horas, minutos y segundos
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-      // Mostramos el cronómetro en formato: días : horas : minutos : segundos
-      document.getElementById("countdown").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
-
-      // Si el tiempo ha llegado, mostrar mensaje
-      if (distance < 0) {
-        document.getElementById("countdown").innerHTML = "¡Es hora! ¡Feliz cumpleaños!";
-        document.getElementById("specialMessage").style.display = "block"; // Mostrar mensaje especial
-      }
-    }
-
-    // Actualiza el cronómetro cada segundo
-    setInterval(updateCountdown, 1000);
-
-    // Agregar imágenes al álbum
-    const photos = [
-    "web.jpg", // Ejemplo de imagen
-      "web2.jpg",
-      "web3.jpg",
-       "web5.jpg"
-    ];
-
-    const gallery = document.getElementById('photo-gallery');
-    photos.forEach(photoUrl => {
-      const img = document.createElement('img');
-      img.src = photoUrl;
-      gallery.appendChild(img);
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
