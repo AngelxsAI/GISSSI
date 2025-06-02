@@ -1,5 +1,5 @@
 // Efecto máquina de escribir
-const mensaje = `Para el amor de mi vida:\n\nSi pudiera elegir un lugar seguro, sería a tu lado. Cuanto más tiempo estoy contigo, más te amo.\nEste texto es solo un ejemplo de demostración y no refleja sentimientos reales.\n\n— ¡I Love You!`;
+const mensaje = `Para el amor de mi vida:\n\nSi pudiera elegir un lugar seguro, sería a tu lado. Cuanto más tiempo estoy contigo, más te amo.\n te amo mucho .\n\n— ¡I Love You!`;
 
 function escribirTexto(id, texto, velocidad = 40) {
   let i = 0;
@@ -35,7 +35,7 @@ setTimeout(() => {
 }, 2000);
 
 // Reloj romántico
-const fechaInicio = new Date("2024-06-01T00:00:00");
+const fechaInicio = new Date("2024-12-08T16:30:00"); // Cambiada la fecha
 function actualizarReloj() {
   const ahora = new Date();
   const diff = ahora - fechaInicio;
