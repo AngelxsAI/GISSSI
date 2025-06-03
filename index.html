@@ -1,8 +1,8 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Frases para Gissela</title>
   <style>
     body {
@@ -15,52 +15,53 @@
       align-items: center;
       justify-content: center;
       min-height: 100vh;
+      overflow-x: hidden;
+      text-align: center;
     }
 
     .corazon {
       position: relative;
-      width: 240px;
-      height: 210px;
+      width: 200px;
+      height: 180px;
       background: red;
       transform: rotate(-45deg);
-      margin-top: 20px;
+      margin-top: 40px;
     }
 
     .corazon::before,
     .corazon::after {
       content: "";
       position: absolute;
-      width: 240px;
-      height: 210px;
+      width: 200px;
+      height: 180px;
       background: red;
       border-radius: 50%;
     }
 
     .corazon::before {
-      top: -120px;
+      top: -100px;
       left: 0;
     }
 
     .corazon::after {
       top: 0;
-      left: 120px;
+      left: 100px;
     }
 
     .frase {
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 180px;
       transform: translate(-50%, -50%) rotate(45deg);
       color: white;
-      text-align: center;
-      font-size: 16px;
-      line-height: 1.4;
+      width: 150px;
+      font-size: 14px;
+      line-height: 1.5;
       padding: 10px;
     }
 
     button {
-      margin-top: 40px;
+      margin-top: 30px;
       padding: 12px 24px;
       font-size: 18px;
       border: none;
@@ -68,36 +69,35 @@
       background-color: red;
       color: white;
       cursor: pointer;
-      transition: background-color 0.3s;
     }
 
     button:hover {
       background-color: darkred;
     }
 
-    @media (max-width: 500px) {
-      .frase {
-        font-size: 14px;
-        width: 160px;
-      }
-
+    @media (max-width: 480px) {
       .corazon {
-        width: 200px;
-        height: 180px;
+        width: 180px;
+        height: 160px;
       }
 
       .corazon::before,
       .corazon::after {
-        width: 200px;
-        height: 180px;
+        width: 180px;
+        height: 160px;
       }
 
       .corazon::after {
-        left: 100px;
+        left: 90px;
       }
 
       .corazon::before {
-        top: -100px;
+        top: -90px;
+      }
+
+      .frase {
+        width: 130px;
+        font-size: 13px;
       }
     }
   </style>
@@ -109,95 +109,75 @@
   <button onclick="nuevaFrase()">Frases</button>
 
   <script>
-    const ideas = [
+    const baseFrases = [
       "Te amo Gissela con todo mi ser",
-      "Te quiero Gissela cada día más",
-      "Te adoro Gissela sin medida",
-      "Eres mi cielo Gissela",
-      "Gissela, mi amor eterno",
-      "Gissela, eres mi luz y mi paz",
-      "Contigo, todo es mejor Gissela",
-      "Gissela, mi razón de sonreír",
-      "Gissela, mi todo en esta vida",
-      "Gissela, mi mundo gira por ti",
-      "Nada es más bello que tú Gissela",
-      "Gissela, te amo más que ayer",
-      "Eres mi sueño hecho realidad Gissela",
-      "Gissela, mi corazón late por ti",
-      "Gracias por existir Gissela",
-      "Mi vida tiene sentido contigo Gissela",
-      "Gissela, mi dulce amor",
-      "Te pienso cada segundo Gissela",
-      "Gissela, solo tú en mi mente",
-      "Mi corazón te pertenece Gissela",
-      "Gissela, eres poesía viva",
-      "Eres mi destino Gissela",
-      "Gissela, te necesito en mi vida",
-      "Gissela, contigo quiero todo",
-      "Eres mi melodía Gissela",
-      "Gissela, el amor de mi vida",
-      "Eres mi persona favorita Gissela",
-      "Te amo con locura Gissela",
-      "Gissela, sin ti no hay sol",
-      "Contigo aprendí a amar Gissela",
-      "Tu nombre embellece mis días Gissela",
-      "Gissela, eres magia pura",
-      "Tu sonrisa es mi paz Gissela",
-      "Gissela, me haces feliz",
-      "Eres mi lugar seguro Gissela",
-      "Gissela, tú y yo por siempre",
-      "Gissela, en tus ojos me pierdo",
-      "Gissela, mi universo",
-      "Eres el amor que soñé Gissela",
-      "Cada latido grita Gissela",
-      "Gissela, eres mi sol y luna",
-      "Gissela, te amo sin final",
-      "Gissela, mi todo y más",
-      "Siempre tú, Gissela",
-      "Gissela, solo tú en mi corazón",
-      "Eres mi mejor historia Gissela",
-      "Gissela, mi ángel",
-      "Gissela, eres mi hogar",
-      "Gissela, lo eres todo para mí",
-      "Gissela, cada segundo contigo vale oro",
-      "Te amo hoy y siempre, Gissela"
+      "Te quiero Gissela más que a nadie",
+      "Te adoro Gissela con el alma",
+      "Gissela, eres mi sol de cada día",
+      "Gissela, mi dulce amor eterno",
+      "Gissela, eres mi paz y mi alegría",
+      "Gissela, me haces feliz cada instante",
+      "Gissela, no dejo de pensar en ti",
+      "Eres mi mundo Gissela",
+      "Contigo todo es mejor Gissela",
+      "Gissela, te llevo en mi corazón",
+      "Cada suspiro lleva tu nombre Gissela",
+      "No hay día sin pensarte Gissela",
+      "Te pienso Gissela desde que amanece",
+      "Mi cielo lleva tu nombre Gissela",
+      "Eres mi princesa Gissela",
+      "Gissela, eres mi razón de existir",
+      "Te extraño Gissela incluso estando cerca",
+      "Gissela, eres el amor que soñé",
+      "Gissela, eres más que especial para mí",
+      "Gissela, eres mi destino soñado",
+      "Nada se compara a ti Gissela",
+      "Gissela, me haces mejor persona",
+      "Gissela, eres lo que más amo",
+      "Te llevo en el alma Gissela"
     ];
 
-    // Llenar hasta 1000 frases únicas combinando
-    while (ideas.length < 1000) {
-      let base = ideas[Math.floor(Math.random() * 50)];
-      let extra = ["mi reina", "mi cielo", "mi princesa", "mi estrella", "mi tesoro", "mi todo", "mi sol", "mi poesía", "mi destino", "mi ilusión"];
-      let final = base + " " + extra[Math.floor(Math.random() * extra.length)];
-      if (!ideas.includes(final)) {
-        ideas.push(final);
-      }
+    const extras = [
+      "mi reina", "mi tesoro", "mi cielo", "mi sol", "mi flor",
+      "mi inspiración", "mi canción favorita", "mi poema eterno",
+      "mi todo", "mi luz en la oscuridad", "mi ángel", "mi alegría",
+      "mi motor", "mi corazón", "mi razón de amar", "mi universo"
+    ];
+
+    let frases = new Set(baseFrases);
+
+    // Crear frases únicas hasta llegar a 1000
+    while (frases.size < 1000) {
+      const base = baseFrases[Math.floor(Math.random() * baseFrases.length)];
+      const extra = extras[Math.floor(Math.random() * extras.length)];
+      frases.add(`${base}, ${extra}`);
     }
 
+    const listaFrases = Array.from(frases);
     let usadas = new Set();
-    let fraseActual = "";
 
-    function escribirTexto(texto, elementoId) {
-      const el = document.getElementById(elementoId);
+    function escribirTexto(texto, id) {
+      const el = document.getElementById(id);
       el.textContent = '';
       let i = 0;
-      const intervalo = setInterval(() => {
+      const interval = setInterval(() => {
         el.textContent += texto.charAt(i);
         i++;
-        if (i >= texto.length) clearInterval(intervalo);
-      }, 50);
+        if (i >= texto.length) clearInterval(interval);
+      }, 40);
     }
 
     function nuevaFrase() {
-      if (usadas.size === ideas.length) usadas.clear();
-      let nueva;
+      if (usadas.size >= listaFrases.length) usadas.clear();
+      let frase;
       do {
-        nueva = ideas[Math.floor(Math.random() * ideas.length)];
-      } while (usadas.has(nueva) || nueva === fraseActual);
-      usadas.add(nueva);
-      fraseActual = nueva;
-      escribirTexto(nueva, "frase");
+        frase = listaFrases[Math.floor(Math.random() * listaFrases.length)];
+      } while (usadas.has(frase));
+      usadas.add(frase);
+      escribirTexto(frase, "frase");
     }
 
+    // Mostrar una frase al cargar
     window.onload = nuevaFrase;
   </script>
 </body>
