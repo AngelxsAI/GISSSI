@@ -2,22 +2,120 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Árbol de Corazones y Reloj Romántico</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Frases para Gissela</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: pink;
+      font-family: 'Courier New', monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    .corazon {
+      position: relative;
+      width: 300px;
+      height: 270px;
+      background: red;
+      transform: rotate(-45deg);
+      margin-bottom: 40px;
+    }
+
+    .corazon::before,
+    .corazon::after {
+      content: "";
+      position: absolute;
+      width: 300px;
+      height: 270px;
+      background: red;
+      border-radius: 50%;
+    }
+
+    .corazon::before {
+      top: -150px;
+      left: 0;
+    }
+
+    .corazon::after {
+      left: 150px;
+      top: 0;
+    }
+
+    .frase {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 20px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 18px;
+      border: none;
+      border-radius: 12px;
+      background-color: red;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: darkred;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <div class="heart-tree">
-      <div class="tronco" id="tronco"></div>
-      <div class="corazones" id="heartTree"></div>
-    </div>
-
-    <div class="texto" id="texto"></div>
-
-    <p class="contador">Mi amor por ti comenzó hace...</p>
-    <div id="reloj" class="reloj"></div>
+  <div class="corazon">
+    <div id="frase" class="frase"></div>
   </div>
+  <button onclick="nuevaFrase()">Frases</button>
 
-  <script src="script.js"></script>
+  <script>
+    const frases = [];
+    const nombres = ["Te amo", "Te quiero", "Te adoro", "Te pienso", "Te sueño", "Te extraño", "Te necesito", "Te valoro", "Te abrazo", "Te deseo",
+                     "Estoy loco por ti", "Eres mi sol", "Eres mi vida", "Eres mi todo", "Eres mi mundo", "Eres mi alegría", "Mi amor eterno", 
+                     "Eres lo mejor", "Mi razón de sonreír", "Mi inspiración diaria", "Eres mi Gissela hermosa"];
+
+    // Generar 1000 frases únicas
+    for (let i = 0; i < 1000; i++) {
+      let inicio = nombres[Math.floor(Math.random() * nombres.length)];
+      let frase = `${inicio} Gissela ${i + 1}`;
+      if (!frases.includes(frase)) {
+        frases.push(frase);
+      }
+    }
+
+    let fraseActual = -1;
+
+    function escribirTexto(texto, elementoId) {
+      const el = document.getElementById(elementoId);
+      el.textContent = '';
+      let i = 0;
+      const intervalo = setInterval(() => {
+        el.textContent += texto.charAt(i);
+        i++;
+        if (i >= texto.length) clearInterval(intervalo);
+      }, 50); // velocidad de máquina de escribir
+    }
+
+    function nuevaFrase() {
+      let nueva;
+      do {
+        nueva = Math.floor(Math.random() * frases.length);
+      } while (nueva === fraseActual);
+      fraseActual = nueva;
+      escribirTexto(frases[fraseActual], "frase");
+    }
+
+    // Mostrar la primera al cargar
+    window.onload = nuevaFrase;
+  </script>
 </body>
 </html>
