@@ -1,61 +1,66 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Frases para Gissela</title>
   <style>
     body {
       margin: 0;
+      padding: 0;
       background-color: pink;
       font-family: 'Courier New', monospace;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
     }
 
     .corazon {
       position: relative;
-      width: 300px;
-      height: 270px;
+      width: 240px;
+      height: 210px;
       background: red;
       transform: rotate(-45deg);
-      margin-bottom: 40px;
+      margin-top: 20px;
     }
 
     .corazon::before,
     .corazon::after {
       content: "";
       position: absolute;
-      width: 300px;
-      height: 270px;
+      width: 240px;
+      height: 210px;
       background: red;
       border-radius: 50%;
     }
 
     .corazon::before {
-      top: -150px;
+      top: -120px;
       left: 0;
     }
 
     .corazon::after {
-      left: 150px;
       top: 0;
+      left: 120px;
     }
 
     .frase {
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      width: 180px;
+      transform: translate(-50%, -50%) rotate(45deg);
       color: white;
-      font-size: 20px;
       text-align: center;
-      padding: 20px;
+      font-size: 16px;
+      line-height: 1.4;
+      padding: 10px;
     }
 
     button {
+      margin-top: 40px;
       padding: 12px 24px;
       font-size: 18px;
       border: none;
@@ -69,6 +74,32 @@
     button:hover {
       background-color: darkred;
     }
+
+    @media (max-width: 500px) {
+      .frase {
+        font-size: 14px;
+        width: 160px;
+      }
+
+      .corazon {
+        width: 200px;
+        height: 180px;
+      }
+
+      .corazon::before,
+      .corazon::after {
+        width: 200px;
+        height: 180px;
+      }
+
+      .corazon::after {
+        left: 100px;
+      }
+
+      .corazon::before {
+        top: -100px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -78,21 +109,72 @@
   <button onclick="nuevaFrase()">Frases</button>
 
   <script>
-    const frases = [];
-    const nombres = ["Te amo", "Te quiero", "Te adoro", "Te pienso", "Te sueño", "Te extraño", "Te necesito", "Te valoro", "Te abrazo", "Te deseo",
-                     "Estoy loco por ti", "Eres mi sol", "Eres mi vida", "Eres mi todo", "Eres mi mundo", "Eres mi alegría", "Mi amor eterno", 
-                     "Eres lo mejor", "Mi razón de sonreír", "Mi inspiración diaria", "Eres mi Gissela hermosa"];
+    const ideas = [
+      "Te amo Gissela con todo mi ser",
+      "Te quiero Gissela cada día más",
+      "Te adoro Gissela sin medida",
+      "Eres mi cielo Gissela",
+      "Gissela, mi amor eterno",
+      "Gissela, eres mi luz y mi paz",
+      "Contigo, todo es mejor Gissela",
+      "Gissela, mi razón de sonreír",
+      "Gissela, mi todo en esta vida",
+      "Gissela, mi mundo gira por ti",
+      "Nada es más bello que tú Gissela",
+      "Gissela, te amo más que ayer",
+      "Eres mi sueño hecho realidad Gissela",
+      "Gissela, mi corazón late por ti",
+      "Gracias por existir Gissela",
+      "Mi vida tiene sentido contigo Gissela",
+      "Gissela, mi dulce amor",
+      "Te pienso cada segundo Gissela",
+      "Gissela, solo tú en mi mente",
+      "Mi corazón te pertenece Gissela",
+      "Gissela, eres poesía viva",
+      "Eres mi destino Gissela",
+      "Gissela, te necesito en mi vida",
+      "Gissela, contigo quiero todo",
+      "Eres mi melodía Gissela",
+      "Gissela, el amor de mi vida",
+      "Eres mi persona favorita Gissela",
+      "Te amo con locura Gissela",
+      "Gissela, sin ti no hay sol",
+      "Contigo aprendí a amar Gissela",
+      "Tu nombre embellece mis días Gissela",
+      "Gissela, eres magia pura",
+      "Tu sonrisa es mi paz Gissela",
+      "Gissela, me haces feliz",
+      "Eres mi lugar seguro Gissela",
+      "Gissela, tú y yo por siempre",
+      "Gissela, en tus ojos me pierdo",
+      "Gissela, mi universo",
+      "Eres el amor que soñé Gissela",
+      "Cada latido grita Gissela",
+      "Gissela, eres mi sol y luna",
+      "Gissela, te amo sin final",
+      "Gissela, mi todo y más",
+      "Siempre tú, Gissela",
+      "Gissela, solo tú en mi corazón",
+      "Eres mi mejor historia Gissela",
+      "Gissela, mi ángel",
+      "Gissela, eres mi hogar",
+      "Gissela, lo eres todo para mí",
+      "Gissela, cada segundo contigo vale oro",
+      "Te amo hoy y siempre, Gissela"
+    ];
 
-    // Generar 1000 frases únicas
-    for (let i = 0; i < 1000; i++) {
-      let inicio = nombres[Math.floor(Math.random() * nombres.length)];
-      let frase = `${inicio} Gissela ${i + 1}`;
-      if (!frases.includes(frase)) {
-        frases.push(frase);
+    // Llenar hasta 1000 frases únicas combinando
+    while (ideas.length < 1000) {
+      let base = ideas[Math.floor(Math.random() * 50)];
+      let extra = ["mi reina", "mi cielo", "mi princesa", "mi estrella", "mi tesoro", "mi todo", "mi sol", "mi poesía", "mi destino", "mi ilusión"];
+      let final = base + " " + extra[Math.floor(Math.random() * extra.length)];
+      if (!ideas.includes(final)) {
+        ideas.push(final);
       }
     }
 
-    let fraseActual = -1;
+    let usadas = new Set();
+    let fraseActual = "";
 
     function escribirTexto(texto, elementoId) {
       const el = document.getElementById(elementoId);
@@ -102,19 +184,20 @@
         el.textContent += texto.charAt(i);
         i++;
         if (i >= texto.length) clearInterval(intervalo);
-      }, 50); // velocidad de máquina de escribir
+      }, 50);
     }
 
     function nuevaFrase() {
+      if (usadas.size === ideas.length) usadas.clear();
       let nueva;
       do {
-        nueva = Math.floor(Math.random() * frases.length);
-      } while (nueva === fraseActual);
+        nueva = ideas[Math.floor(Math.random() * ideas.length)];
+      } while (usadas.has(nueva) || nueva === fraseActual);
+      usadas.add(nueva);
       fraseActual = nueva;
-      escribirTexto(frases[fraseActual], "frase");
+      escribirTexto(nueva, "frase");
     }
 
-    // Mostrar la primera al cargar
     window.onload = nuevaFrase;
   </script>
 </body>
