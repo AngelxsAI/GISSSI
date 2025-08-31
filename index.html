@@ -1,184 +1,158 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Frases para Gissela</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Respuestas en línea</title>
+  <!-- SDK Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
   <style>
     body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
       margin: 0;
       padding: 0;
-      background-color: pink;
-      font-family: 'Courier New', monospace;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      overflow-x: hidden;
+      color: #333;
+    }
+    header {
+      background: #ff6b6b;
+      color: white;
+      padding: 20px;
       text-align: center;
     }
-
-    .corazon {
-      position: relative;
-      width: 200px;
-      height: 180px;
-      background: red;
-      transform: rotate(-45deg);
-      margin-top: 40px;
+    h1 {
+      margin: 0;
+      font-size: 2rem;
     }
-
-    .corazon::before,
-    .corazon::after {
-      content: "";
-      position: absolute;
-      width: 200px;
-      height: 180px;
-      background: red;
-      border-radius: 50%;
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-
-    .corazon::before {
-      top: -100px;
-      left: 0;
+    .question {
+      font-weight: bold;
+      margin-top: 15px;
+      color: #ff6b6b;
     }
-
-    .corazon::after {
-      top: 0;
-      left: 100px;
-    }
-
-    .frase {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(45deg);
-      color: white;
-      width: 150px;
-      font-size: 14px;
-      line-height: 1.5;
+    .answer {
+      margin-top: 5px;
       padding: 10px;
+      background: #f0f0f0;
+      border-radius: 8px;
     }
-
+    .section-title {
+      margin-top: 25px;
+      font-size: 1.5rem;
+      color: #4a4a4a;
+      border-bottom: 2px solid #ff6b6b;
+      padding-bottom: 5px;
+    }
+    form {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    input, button {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
     button {
-      margin-top: 30px;
-      padding: 12px 24px;
-      font-size: 18px;
-      border: none;
-      border-radius: 12px;
-      background-color: red;
+      background: #ff6b6b;
       color: white;
+      border: none;
       cursor: pointer;
     }
-
     button:hover {
-      background-color: darkred;
-    }
-
-    @media (max-width: 480px) {
-      .corazon {
-        width: 180px;
-        height: 160px;
-      }
-
-      .corazon::before,
-      .corazon::after {
-        width: 180px;
-        height: 160px;
-      }
-
-      .corazon::after {
-        left: 90px;
-      }
-
-      .corazon::before {
-        top: -90px;
-      }
-
-      .frase {
-        width: 130px;
-        font-size: 13px;
-      }
+      background: #e55a5a;
     }
   </style>
 </head>
 <body>
-  <div class="corazon">
-    <div id="frase" class="frase"></div>
+
+<header>
+  <h1>Respuestas en línea</h1>
+</header>
+
+<div class="container">
+
+  <div class="section-title">Preguntas y Respuestas</div>
+  <div id="answersContainer">
+    <!-- Aquí se cargarán las respuestas desde Supabase -->
   </div>
-  <button onclick="nuevaFrase()">Frases</button>
 
-  <script>
-    const baseFrases = [
-      "Te amo Gissela con todo mi ser",
-      "Te quiero Gissela más que a nadie",
-      "Te adoro Gissela con el alma",
-      "Gissela, eres mi sol de cada día",
-      "Gissela, mi dulce amor eterno",
-      "Gissela, eres mi paz y mi alegría",
-      "Gissela, me haces feliz cada instante",
-      "Gissela, no dejo de pensar en ti",
-      "Eres mi mundo Gissela",
-      "Contigo todo es mejor Gissela",
-      "Gissela, te llevo en mi corazón",
-      "Cada suspiro lleva tu nombre Gissela",
-      "No hay día sin pensarte Gissela",
-      "Te pienso Gissela desde que amanece",
-      "Mi cielo lleva tu nombre Gissela",
-      "Eres mi princesa Gissela",
-      "Gissela, eres mi razón de existir",
-      "Te extraño Gissela incluso estando cerca",
-      "Gissela, eres el amor que soñé",
-      "Gissela, eres más que especial para mí",
-      "Gissela, eres mi destino soñado",
-      "Nada se compara a ti Gissela",
-      "Gissela, me haces mejor persona",
-      "Gissela, eres lo que más amo",
-      "Te llevo en el alma Gissela"
-    ];
+  <div class="section-title">Agregar Nueva Respuesta</div>
+  <form id="answerForm">
+    <input type="text" id="question" placeholder="Pregunta" required>
+    <input type="text" id="answer" placeholder="Respuesta" required>
+    <button type="submit">Guardar</button>
+  </form>
 
-    const extras = [
-      "mi reina", "mi tesoro", "mi cielo", "mi sol", "mi flor",
-      "mi inspiración", "mi canción favorita", "mi poema eterno",
-      "mi todo", "mi luz en la oscuridad", "mi ángel", "mi alegría",
-      "mi motor", "mi corazón", "mi razón de amar", "mi universo"
-    ];
+</div>
 
-    let frases = new Set(baseFrases);
+<script>
+  // Conexión a Supabase
+  const SUPABASE_URL = 'https://gmlyhkhbnmsmsvvzasbp.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtbHloa2hibm1zbXN2dnphc2JwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY2NjE0NDYsImV4cCI6MjA3MjIzNzQ0Nn0.UfknZyDzjfvrXiCmyW9reEVK5U669sORh6dQ2ipnNDM';
+  const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // Crear frases únicas hasta llegar a 1000
-    while (frases.size < 1000) {
-      const base = baseFrases[Math.floor(Math.random() * baseFrases.length)];
-      const extra = extras[Math.floor(Math.random() * extras.length)];
-      frases.add(`${base}, ${extra}`);
+  const container = document.getElementById('answersContainer');
+
+  // Función para cargar respuestas
+  async function loadAnswers() {
+    const { data, error } = await supabase
+      .from('answers')
+      .select('*')
+      .order('id', { ascending: true });
+
+    if (error) {
+      container.innerHTML = `<p>Error al cargar las respuestas.</p>`;
+      console.error(error);
+      return;
     }
 
-    const listaFrases = Array.from(frases);
-    let usadas = new Set();
+    container.innerHTML = '';
+    data.forEach(item => {
+      const qDiv = document.createElement('div');
+      qDiv.className = 'question';
+      qDiv.textContent = item.question;
 
-    function escribirTexto(texto, id) {
-      const el = document.getElementById(id);
-      el.textContent = '';
-      let i = 0;
-      const interval = setInterval(() => {
-        el.textContent += texto.charAt(i);
-        i++;
-        if (i >= texto.length) clearInterval(interval);
-      }, 40);
+      const aDiv = document.createElement('div');
+      aDiv.className = 'answer';
+      aDiv.textContent = item.answer;
+
+      container.appendChild(qDiv);
+      container.appendChild(aDiv);
+    });
+  }
+
+  loadAnswers();
+
+  // Formulario para agregar respuesta
+  document.getElementById('answerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const question = document.getElementById('question').value;
+    const answer = document.getElementById('answer').value;
+
+    const { data, error } = await supabase
+      .from('answers')
+      .insert([{ question, answer }]);
+
+    if (error) {
+      alert('Error al guardar respuesta');
+      console.error(error);
+    } else {
+      alert('Respuesta guardada!');
+      loadAnswers();
+      e.target.reset();
     }
+  });
+</script>
 
-    function nuevaFrase() {
-      if (usadas.size >= listaFrases.length) usadas.clear();
-      let frase;
-      do {
-        frase = listaFrases[Math.floor(Math.random() * listaFrases.length)];
-      } while (usadas.has(frase));
-      usadas.add(frase);
-      escribirTexto(frase, "frase");
-    }
-
-    // Mostrar una frase al cargar
-    window.onload = nuevaFrase;
-  </script>
 </body>
 </html>
