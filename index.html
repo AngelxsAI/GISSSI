@@ -1,158 +1,326 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Respuestas en línea</title>
-  <!-- SDK Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f7f7f7;
-      margin: 0;
-      padding: 0;
-      color: #333;
-    }
-    header {
-      background: #ff6b6b;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
-    h1 {
-      margin: 0;
-      font-size: 2rem;
-    }
-    .container {
-      max-width: 800px;
-      margin: 20px auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    .question {
-      font-weight: bold;
-      margin-top: 15px;
-      color: #ff6b6b;
-    }
-    .answer {
-      margin-top: 5px;
-      padding: 10px;
-      background: #f0f0f0;
-      border-radius: 8px;
-    }
-    .section-title {
-      margin-top: 25px;
-      font-size: 1.5rem;
-      color: #4a4a4a;
-      border-bottom: 2px solid #ff6b6b;
-      padding-bottom: 5px;
-    }
-    form {
-      margin-top: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    input, button {
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-    button {
-      background: #ff6b6b;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #e55a5a;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geometry Dash Simplificado</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #222;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        
+        #game-container {
+            position: relative;
+            width: 800px;
+            height: 400px;
+            background-color: #111;
+            border: 2px solid #444;
+            overflow: hidden;
+        }
+        
+        #player {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #00f;
+            border-radius: 50%;
+            left: 50px;
+            bottom: 50px;
+        }
+        
+        .obstacle {
+            position: absolute;
+            background-color: #f00;
+            bottom: 50px;
+        }
+        
+        .ground {
+            position: absolute;
+            width: 100%;
+            height: 50px;
+            background-color: #555;
+            bottom: 0;
+        }
+        
+        #score {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: white;
+            font-size: 24px;
+        }
+        
+        #start-screen, #game-over {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            z-index: 10;
+        }
+        
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #00f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        button:hover {
+            background-color: #33f;
+        }
+        
+        #game-over {
+            display: none;
+        }
+    </style>
 </head>
 <body>
+    <div id="game-container">
+        <div class="ground"></div>
+        <div id="player"></div>
+        <div id="score">0</div>
+        
+        <div id="start-screen">
+            <h1>Geometry Dash Simplificado</h1>
+            <p>Haz clic o presiona ESPACIO para saltar</p>
+            <button id="start-button">Comenzar</button>
+        </div>
+        
+        <div id="game-over">
+            <h1>Game Over</h1>
+            <p>Puntuación: <span id="final-score">0</span></p>
+            <button id="restart-button">Reintentar</button>
+        </div>
+    </div>
 
-<header>
-  <h1>Respuestas en línea</h1>
-</header>
-
-<div class="container">
-
-  <div class="section-title">Preguntas y Respuestas</div>
-  <div id="answersContainer">
-    <!-- Aquí se cargarán las respuestas desde Supabase -->
-  </div>
-
-  <div class="section-title">Agregar Nueva Respuesta</div>
-  <form id="answerForm">
-    <input type="text" id="question" placeholder="Pregunta" required>
-    <input type="text" id="answer" placeholder="Respuesta" required>
-    <button type="submit">Guardar</button>
-  </form>
-
-</div>
-
-<script>
-  // Conexión a Supabase
-  const SUPABASE_URL = 'https://gmlyhkhbnmsmsvvzasbp.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtbHloa2hibm1zbXN2dnphc2JwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY2NjE0NDYsImV4cCI6MjA3MjIzNzQ0Nn0.UfknZyDzjfvrXiCmyW9reEVK5U669sORh6dQ2ipnNDM';
-  const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  const container = document.getElementById('answersContainer');
-
-  // Función para cargar respuestas
-  async function loadAnswers() {
-    const { data, error } = await supabase
-      .from('answers')
-      .select('*')
-      .order('id', { ascending: true });
-
-    if (error) {
-      container.innerHTML = `<p>Error al cargar las respuestas.</p>`;
-      console.error(error);
-      return;
-    }
-
-    container.innerHTML = '';
-    data.forEach(item => {
-      const qDiv = document.createElement('div');
-      qDiv.className = 'question';
-      qDiv.textContent = item.question;
-
-      const aDiv = document.createElement('div');
-      aDiv.className = 'answer';
-      aDiv.textContent = item.answer;
-
-      container.appendChild(qDiv);
-      container.appendChild(aDiv);
-    });
-  }
-
-  loadAnswers();
-
-  // Formulario para agregar respuesta
-  document.getElementById('answerForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const question = document.getElementById('question').value;
-    const answer = document.getElementById('answer').value;
-
-    const { data, error } = await supabase
-      .from('answers')
-      .insert([{ question, answer }]);
-
-    if (error) {
-      alert('Error al guardar respuesta');
-      console.error(error);
-    } else {
-      alert('Respuesta guardada!');
-      loadAnswers();
-      e.target.reset();
-    }
-  });
-</script>
-
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const player = document.getElementById('player');
+            const gameContainer = document.getElementById('game-container');
+            const scoreElement = document.getElementById('score');
+            const finalScoreElement = document.getElementById('final-score');
+            const startScreen = document.getElementById('start-screen');
+            const gameOverScreen = document.getElementById('game-over');
+            const startButton = document.getElementById('start-button');
+            const restartButton = document.getElementById('restart-button');
+            
+            let gameActive = false;
+            let playerY = 0;
+            let playerVelocity = 0;
+            let gravity = 0.5;
+            let isJumping = false;
+            let score = 0;
+            let obstacles = [];
+            let gameSpeed = 3;
+            let gameLoop;
+            let obstacleTimer;
+            
+            // Iniciar juego
+            startButton.addEventListener('click', startGame);
+            restartButton.addEventListener('click', startGame);
+            
+            // Controles
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space' && gameActive) {
+                    jump();
+                }
+            });
+            
+            gameContainer.addEventListener('click', () => {
+                if (gameActive) {
+                    jump();
+                }
+            });
+            
+            function startGame() {
+                // Reiniciar variables
+                gameActive = true;
+                score = 0;
+                playerY = 0;
+                playerVelocity = 0;
+                gameSpeed = 3;
+                obstacles = [];
+                scoreElement.textContent = '0';
+                
+                // Ocultar pantallas
+                startScreen.style.display = 'none';
+                gameOverScreen.style.display = 'none';
+                
+                // Limpiar obstáculos existentes
+                document.querySelectorAll('.obstacle').forEach(obs => obs.remove());
+                
+                // Posición inicial del jugador
+                player.style.bottom = '50px';
+                
+                // Iniciar bucles del juego
+                clearInterval(obstacleTimer);
+                cancelAnimationFrame(gameLoop);
+                
+                generateObstacles();
+                gameLoop = requestAnimationFrame(updateGame);
+            }
+            
+            function jump() {
+                if (!isJumping && gameActive) {
+                    isJumping = true;
+                    playerVelocity = -12;
+                }
+            }
+            
+            function updateGame() {
+                if (!gameActive) return;
+                
+                // Aplicar gravedad
+                playerY += playerVelocity;
+                playerVelocity += gravity;
+                
+                // Limitar al suelo
+                if (playerY > 0) {
+                    playerY = 0;
+                    playerVelocity = 0;
+                    isJumping = false;
+                }
+                
+                // Actualizar posición del jugador
+                player.style.bottom = (50 + playerY) + 'px';
+                
+                // Mover y comprobar obstáculos
+                moveObstacles();
+                checkCollisions();
+                
+                // Incrementar puntuación
+                score += 0.1;
+                scoreElement.textContent = Math.floor(score);
+                
+                // Aumentar dificultad
+                if (score % 100 === 0 && score > 0) {
+                    gameSpeed += 0.1;
+                }
+                
+                gameLoop = requestAnimationFrame(updateGame);
+            }
+            
+            function generateObstacles() {
+                obstacleTimer = setInterval(() => {
+                    if (!gameActive) return;
+                    
+                    const obstacle = document.createElement('div');
+                    obstacle.className = 'obstacle';
+                    
+                    // Tipos aleatorios de obstáculos
+                    const obstacleType = Math.floor(Math.random() * 3);
+                    let width, height;
+                    
+                    switch(obstacleType) {
+                        case 0: // Obstáculo bajo
+                            width = 30;
+                            height = 40;
+                            break;
+                        case 1: // Obstáculo alto
+                            width = 30;
+                            height = 80;
+                            break;
+                        case 2: // Obstáculo ancho
+                            width = 60;
+                            height = 30;
+                            break;
+                    }
+                    
+                    obstacle.style.width = width + 'px';
+                    obstacle.style.height = height + 'px';
+                    obstacle.style.right = -width + 'px';
+                    
+                    gameContainer.appendChild(obstacle);
+                    obstacles.push({
+                        element: obstacle,
+                        x: 800,
+                        width: width,
+                        height: height,
+                        passed: false
+                    });
+                    
+                }, 1500); // Generar cada 1.5 segundos
+            }
+            
+            function moveObstacles() {
+                for (let i = 0; i < obstacles.length; i++) {
+                    const obstacle = obstacles[i];
+                    obstacle.x -= gameSpeed;
+                    obstacle.element.style.right = obstacle.x + 'px';
+                    
+                    // Eliminar obstáculos que salen de pantalla
+                    if (obstacle.x < -obstacle.width) {
+                        obstacle.element.remove();
+                        obstacles.splice(i, 1);
+                        i--;
+                    }
+                }
+            }
+            
+            function checkCollisions() {
+                const playerRect = {
+                    x: 50,
+                    y: 400 - (50 + playerY + 30), // Invertir coordenadas Y
+                    width: 30,
+                    height: 30
+                };
+                
+                for (let i = 0; i < obstacles.length; i++) {
+                    const obstacle = obstacles[i];
+                    const obstacleRect = {
+                        x: 800 - obstacle.x - obstacle.width,
+                        y: 400 - 50 - obstacle.height,
+                        width: obstacle.width,
+                        height: obstacle.height
+                    };
+                    
+                    // Detectar colisión
+                    if (playerRect.x < obstacleRect.x + obstacleRect.width &&
+                        playerRect.x + playerRect.width > obstacleRect.x &&
+                        playerRect.y < obstacleRect.y + obstacleRect.height &&
+                        playerRect.y + playerRect.height > obstacleRect.y) {
+                        gameOver();
+                        return;
+                    }
+                    
+                    // Contar puntos al pasar obstáculos
+                    if (!obstacle.passed && obstacleRect.x + obstacleRect.width < playerRect.x) {
+                        obstacle.passed = true;
+                        // Puntos adicionales por pasar obstáculos
+                        score += 5;
+                        scoreElement.textContent = Math.floor(score);
+                    }
+                }
+            }
+            
+            function gameOver() {
+                gameActive = false;
+                clearInterval(obstacleTimer);
+                cancelAnimationFrame(gameLoop);
+                
+                finalScoreElement.textContent = Math.floor(score);
+                gameOverScreen.style.display = 'flex';
+            }
+        });
+    </script>
 </body>
 </html>
