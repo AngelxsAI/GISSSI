@@ -3,324 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geometry Dash Simplificado</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #222;
-            font-family: Arial, sans-serif;
-            overflow: hidden;
-        }
-        
-        #game-container {
-            position: relative;
-            width: 800px;
-            height: 400px;
-            background-color: #111;
-            border: 2px solid #444;
-            overflow: hidden;
-        }
-        
-        #player {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            background-color: #00f;
-            border-radius: 50%;
-            left: 50px;
-            bottom: 50px;
-        }
-        
-        .obstacle {
-            position: absolute;
-            background-color: #f00;
-            bottom: 50px;
-        }
-        
-        .ground {
-            position: absolute;
-            width: 100%;
-            height: 50px;
-            background-color: #555;
-            bottom: 0;
-        }
-        
-        #score {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            color: white;
-            font-size: 24px;
-        }
-        
-        #start-screen, #game-over {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            z-index: 10;
-        }
-        
-        button {
-            padding: 10px 20px;
-            font-size: 18px;
-            background-color: #00f;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        
-        button:hover {
-            background-color: #33f;
-        }
-        
-        #game-over {
-            display: none;
-        }
-    </style>
+    <title>Para Gissela</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="game-container">
-        <div class="ground"></div>
-        <div id="player"></div>
-        <div id="score">0</div>
-        
-        <div id="start-screen">
-            <h1>Geometry Dash Simplificado</h1>
-            <p>Haz clic o presiona ESPACIO para saltar</p>
-            <button id="start-button">Comenzar</button>
-        </div>
-        
-        <div id="game-over">
-            <h1>Game Over</h1>
-            <p>Puntuación: <span id="final-score">0</span></p>
-            <button id="restart-button">Reintentar</button>
+    <!-- Pantalla de contraseña -->
+    <div id="password-screen" class="password-screen">
+        <div class="password-container">
+            <div class="tulip-animation">
+                <svg viewBox="0 0 100 100" class="tulip">
+                    <path d="M50,20 C60,10 70,15 65,30 C70,35 75,40 70,50 C65,60 60,65 50,70 C40,65 35,60 30,50 C25,40 30,35 35,30 C30,15 40,10 50,20 Z" fill="#8A2BE2"/>
+                    <path d="M50,70 L50,90" stroke="#8A2BE2" stroke-width="3"/>
+                </svg>
+            </div>
+            <h1 class="password-title">¿Gissela?</h1>
+            <p class="password-subtitle">¿Si conozco a Gissela?</p>
+            <p id="typing-text" class="typing-text">Pues…</p>
+            <div class="password-input-container">
+                <input type="password" id="password-input" class="password-input" placeholder="Escribe la contraseña...">
+                <button id="password-submit" class="password-submit">Entrar</button>
+            </div>
+            <p id="password-error" class="password-error"></p>
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const player = document.getElementById('player');
-            const gameContainer = document.getElementById('game-container');
-            const scoreElement = document.getElementById('score');
-            const finalScoreElement = document.getElementById('final-score');
-            const startScreen = document.getElementById('start-screen');
-            const gameOverScreen = document.getElementById('game-over');
-            const startButton = document.getElementById('start-button');
-            const restartButton = document.getElementById('restart-button');
-            
-            let gameActive = false;
-            let playerY = 0;
-            let playerVelocity = 0;
-            let gravity = 0.5;
-            let isJumping = false;
-            let score = 0;
-            let obstacles = [];
-            let gameSpeed = 3;
-            let gameLoop;
-            let obstacleTimer;
-            
-            // Iniciar juego
-            startButton.addEventListener('click', startGame);
-            restartButton.addEventListener('click', startGame);
-            
-            // Controles
-            document.addEventListener('keydown', (e) => {
-                if (e.code === 'Space' && gameActive) {
-                    jump();
-                }
-            });
-            
-            gameContainer.addEventListener('click', () => {
-                if (gameActive) {
-                    jump();
-                }
-            });
-            
-            function startGame() {
-                // Reiniciar variables
-                gameActive = true;
-                score = 0;
-                playerY = 0;
-                playerVelocity = 0;
-                gameSpeed = 3;
-                obstacles = [];
-                scoreElement.textContent = '0';
-                
-                // Ocultar pantallas
-                startScreen.style.display = 'none';
-                gameOverScreen.style.display = 'none';
-                
-                // Limpiar obstáculos existentes
-                document.querySelectorAll('.obstacle').forEach(obs => obs.remove());
-                
-                // Posición inicial del jugador
-                player.style.bottom = '50px';
-                
-                // Iniciar bucles del juego
-                clearInterval(obstacleTimer);
-                cancelAnimationFrame(gameLoop);
-                
-                generateObstacles();
-                gameLoop = requestAnimationFrame(updateGame);
-            }
-            
-            function jump() {
-                if (!isJumping && gameActive) {
-                    isJumping = true;
-                    playerVelocity = -12;
-                }
-            }
-            
-            function updateGame() {
-                if (!gameActive) return;
-                
-                // Aplicar gravedad
-                playerY += playerVelocity;
-                playerVelocity += gravity;
-                
-                // Limitar al suelo
-                if (playerY > 0) {
-                    playerY = 0;
-                    playerVelocity = 0;
-                    isJumping = false;
-                }
-                
-                // Actualizar posición del jugador
-                player.style.bottom = (50 + playerY) + 'px';
-                
-                // Mover y comprobar obstáculos
-                moveObstacles();
-                checkCollisions();
-                
-                // Incrementar puntuación
-                score += 0.1;
-                scoreElement.textContent = Math.floor(score);
-                
-                // Aumentar dificultad
-                if (score % 100 === 0 && score > 0) {
-                    gameSpeed += 0.1;
-                }
-                
-                gameLoop = requestAnimationFrame(updateGame);
-            }
-            
-            function generateObstacles() {
-                obstacleTimer = setInterval(() => {
-                    if (!gameActive) return;
-                    
-                    const obstacle = document.createElement('div');
-                    obstacle.className = 'obstacle';
-                    
-                    // Tipos aleatorios de obstáculos
-                    const obstacleType = Math.floor(Math.random() * 3);
-                    let width, height;
-                    
-                    switch(obstacleType) {
-                        case 0: // Obstáculo bajo
-                            width = 30;
-                            height = 40;
-                            break;
-                        case 1: // Obstáculo alto
-                            width = 30;
-                            height = 80;
-                            break;
-                        case 2: // Obstáculo ancho
-                            width = 60;
-                            height = 30;
-                            break;
-                    }
-                    
-                    obstacle.style.width = width + 'px';
-                    obstacle.style.height = height + 'px';
-                    obstacle.style.right = -width + 'px';
-                    
-                    gameContainer.appendChild(obstacle);
-                    obstacles.push({
-                        element: obstacle,
-                        x: 800,
-                        width: width,
-                        height: height,
-                        passed: false
-                    });
-                    
-                }, 1500); // Generar cada 1.5 segundos
-            }
-            
-            function moveObstacles() {
-                for (let i = 0; i < obstacles.length; i++) {
-                    const obstacle = obstacles[i];
-                    obstacle.x -= gameSpeed;
-                    obstacle.element.style.right = obstacle.x + 'px';
-                    
-                    // Eliminar obstáculos que salen de pantalla
-                    if (obstacle.x < -obstacle.width) {
-                        obstacle.element.remove();
-                        obstacles.splice(i, 1);
-                        i--;
-                    }
-                }
-            }
-            
-            function checkCollisions() {
-                const playerRect = {
-                    x: 50,
-                    y: 400 - (50 + playerY + 30), // Invertir coordenadas Y
-                    width: 30,
-                    height: 30
-                };
-                
-                for (let i = 0; i < obstacles.length; i++) {
-                    const obstacle = obstacles[i];
-                    const obstacleRect = {
-                        x: 800 - obstacle.x - obstacle.width,
-                        y: 400 - 50 - obstacle.height,
-                        width: obstacle.width,
-                        height: obstacle.height
-                    };
-                    
-                    // Detectar colisión
-                    if (playerRect.x < obstacleRect.x + obstacleRect.width &&
-                        playerRect.x + playerRect.width > obstacleRect.x &&
-                        playerRect.y < obstacleRect.y + obstacleRect.height &&
-                        playerRect.y + playerRect.height > obstacleRect.y) {
-                        gameOver();
-                        return;
-                    }
-                    
-                    // Contar puntos al pasar obstáculos
-                    if (!obstacle.passed && obstacleRect.x + obstacleRect.width < playerRect.x) {
-                        obstacle.passed = true;
-                        // Puntos adicionales por pasar obstáculos
-                        score += 5;
-                        scoreElement.textContent = Math.floor(score);
-                    }
-                }
-            }
-            
-            function gameOver() {
-                gameActive = false;
-                clearInterval(obstacleTimer);
-                cancelAnimationFrame(gameLoop);
-                
-                finalScoreElement.textContent = Math.floor(score);
-                gameOverScreen.style.display = 'flex';
-            }
-        });
-    </script>
+    <!-- Contenido principal (oculto inicialmente) -->
+    <div id="main-content" class="main-content hidden">
+        <!-- Carta animada -->
+        <section id="animated-card" class="section animated-card">
+            <div class="card">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <h2>Para Gissela</h2>
+                        <p>Toca para abrir</p>
+                    </div>
+                    <div class="card-back">
+                        <h2>Datos sobre ella</h2>
+                        <div class="card-content">
+                            <div class="info-item">
+                                <h3>Comida favorita</h3>
+                                <p>Pizza, burritos y postres</p>
+                            </div>
+                            <div class="info-item">
+                                <h3>Artistas favoritos</h3>
+                                <div class="artists-grid">
+                                    <div class="artist">
+                                        <div class="album-placeholder"></div>
+                                        <p>BTS</p>
+                                    </div>
+                                    <div class="artist">
+                                        <div class="album-placeholder"></div>
+                                        <p>The Weeknd</p>
+                                    </div>
+                                    <div class="artist">
+                                        <div class="album-placeholder"></div>
+                                        <p>Ariana Grande</p>
+                                    </div>
+                                    <div class="artist">
+                                        <div class="album-placeholder"></div>
+                                        <p>Bad Bunny</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <h3>Colores favoritos</h3>
+                                <div class="colors">
+                                    <div class="color purple"></div>
+                                    <div class="color light-blue"></div>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <h3>Pasatiempos favoritos</h3>
+                                <p>Jugar videojuegos, jugar vóley, escuchar música</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reproductor de música -->
+        <section id="music-player" class="section music-player">
+            <h2>Música Favorita</h2>
+            <div class="player-container">
+                <div class="player-info">
+                    <div class="album-art">
+                        <div class="album-image"></div>
+                    </div>
+                    <div class="track-info">
+                        <h3 id="track-title">Where Have You Been</h3>
+                        <p id="track-artist">Rihanna</p>
+                        <p id="track-year">2011</p>
+                    </div>
+                </div>
+                <div class="player-controls">
+                    <button id="prev-btn" class="control-btn">⏮</button>
+                    <button id="play-btn" class="control-btn play">▶</button>
+                    <button id="next-btn" class="control-btn">⏭</button>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div id="progress" class="progress"></div>
+                    </div>
+                    <div class="time-display">
+                        <span id="current-time">0:00</span>
+                        <span id="total-time">0:00</span>
+                    </div>
+                </div>
+                <div class="lyrics-container">
+                    <div id="lyrics" class="lyrics">
+                        <!-- Las letras se cargarán dinámicamente -->
+                    </div>
+                </div>
+            </div>
+            <button id="next-section-btn" class="next-section-btn">Avanzar a siguiente apartado</button>
+        </section>
+
+        <!-- Cosas que me gustan de Gissela -->
+        <section id="likes-section" class="section likes-section hidden">
+            <h2>Cosas que me gustan de Gissela</h2>
+            <div class="likes-container">
+                <div class="like-item">
+                    <div class="like-icon">💃</div>
+                    <p>Su cuerpo</p>
+                </div>
+                <div class="like-item">
+                    <div class="like-icon">👄</div>
+                    <p>Sus labios</p>
+                </div>
+                <div class="like-item">
+                    <div class="like-icon">👁️</div>
+                    <p>Sus ojos</p>
+                </div>
+                <div class="like-item">
+                    <div class="like-icon">😊</div>
+                    <p>Su sonrisa</p>
+                </div>
+                <div class="like-item">
+                    <div class="like-icon">📏</div>
+                    <p>Su estatura</p>
+                </div>
+                <div class="like-item">
+                    <div class="like-icon">💖</div>
+                    <p>Su manera de ser… aunque a veces lastima</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
